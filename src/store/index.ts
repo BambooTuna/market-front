@@ -77,7 +77,7 @@ export default new Vuex.Store({
         url: 'http://localhost:8080/oauth2/signin/line',
         method: 'post'
       }).then(res => {
-        const redirectUri = res.data.redirect_uri
+        const redirectUri = res.data.redirectUri
         if (res.status === 200 && redirectUri) {
           return Promise.resolve(redirectUri)
         } else {

@@ -37,7 +37,6 @@ import { AxiosResponse } from 'axios'
 
 @Component
 export default class Authentication extends Vue {
-    @Prop() private msg!: string;
     private mail?: string;
     private pass?: string;
 
