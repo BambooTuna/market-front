@@ -33,7 +33,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { AxiosResponse } from 'axios'
 
 @Component
 export default class Authentication extends Vue {

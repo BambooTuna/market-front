@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosResponse } from 'axios'
 
 export default class RestAPI {
   private host!: string
@@ -7,68 +7,122 @@ export default class RestAPI {
     this.host = host
   }
 
-  health (): Promise<void> {
+  signup (payload: SignData): Promise<string> {
+    return axios({
+      url: this.host + '/signup',
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      data: {
+        mail: payload.mail,
+        pass: payload.pass
+      }
+    })
+      .then((res: AxiosResponse) => this.storeSessionToken(res.headers['set-authorization']))
+      .catch((e: AxiosError) => {
+        const errorResponseJson: ErrorResponseJson = e.response?.data
+        return Promise.reject(new Error(errorResponseJson.message))
+      })
+  }
+
+  signin (payload: SignData): Promise<string> {
+    return axios({
+      url: this.host + '/signin',
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      data: {
+        mail: payload.mail,
+        pass: payload.pass
+      }
+    })
+      .then((res: AxiosResponse) => this.storeSessionToken(res.headers['set-authorization']))
+      .catch((e: AxiosError) => {
+        const errorResponseJson: ErrorResponseJson = e.response?.data
+        return Promise.reject(new Error(errorResponseJson.message))
+      })
+  }
+
+  health (): Promise<string> {
     return this.findSessionToken()
       .then(sessionToken => {
-        return axios.get(this.host + '/health', {
-          headers: { 'Set-Authorization': sessionToken },
+        return axios({
+          url: this.host + '/health',
+          method: 'get',
+          headers: { Authorization: sessionToken },
           data: {}
         })
       })
-      .then((res: AxiosResponse) => {
-        if (res.status === 200) {
-          return Promise.resolve()
-        } else {
-          return Promise.reject(new Error('BadRequest'))
-        }
+      .then(() => this.findSessionToken())
+      .catch((e: AxiosError) => {
+        const errorResponseJson: ErrorResponseJson = e.response?.data
+        return Promise.reject(new Error(errorResponseJson.message))
       })
   }
 
-  signup (payload: SignData): Promise<void> {
-    return axios.post(this.host + '/signup', {
-      headers: { 'Content-Type': 'application/json' },
-      data: {
-        mail: payload.mail,
-        pass: payload.pass
-      }
-    }).then(res => {
-      console.log(res)
-      if (res.status === 200) {
-        console.log(200)
-        return this.storeSessionToken(res.headers.Authorization)
-      }
-    })
+  logout (): Promise<void> {
+    return this.findSessionToken()
+      .then(sessionToken => {
+        return axios({
+          url: this.host + '/logout',
+          method: 'delete',
+          headers: { Authorization: sessionToken },
+          data: {}
+        })
+      })
+      .then(() => this.removeSessionToken())
+      .catch((e: AxiosError) => {
+        const errorResponseJson: ErrorResponseJson = e.response?.data
+        return Promise.reject(new Error(errorResponseJson.message))
+      })
   }
 
-  signin (payload: SignData): Promise<void> {
-    return axios.post(this.host + '/signin', {
-      headers: { 'Content-Type': 'application/json' },
-      data: {
-        mail: payload.mail,
-        pass: payload.pass
-      }
-    }).then(res => {
-      if (res.status === 200) {
-        return this.storeSessionToken(res.headers.Authorization)
-      }
+  generateLineCooperationUrl (): Promise<string> {
+    return axios({
+      url: this.host + '/oauth2/signin/line',
+      method: 'post'
     })
+      .then((res: AxiosResponse) => res.data.redirectUri)
+      .catch(() => Promise.reject(new Error('連携URIの発行に失敗しました')))
   }
 
-  private storeSessionToken (sessionToken: string): Promise<void> {
-    return Promise.resolve(localStorage.setItem('sessionToken', sessionToken))
+  lineCooperationSignin (params: OAuth2CodeRedirect): Promise<string> {
+    return axios({
+      url: this.host + '/oauth2/signin/line',
+      method: 'get',
+      params: params
+    }).then((res: AxiosResponse) => this.storeSessionToken(res.headers['set-authorization']))
+      .catch(() => Promise.reject(new Error('Lineでのログインに失敗しました')))
+  }
+
+  private storeSessionToken (sessionToken: string): Promise<string> {
+    localStorage.setItem('sessionToken', sessionToken)
+    return Promise.resolve(sessionToken)
   }
 
   private findSessionToken (): Promise<string> {
     const sessionToken = localStorage.getItem('sessionToken')
     if (sessionToken) {
-      return Promise.resolve('')
+      return Promise.resolve(sessionToken)
     } else {
       return Promise.reject(new Error('sessionToken is null'))
     }
+  }
+
+  private removeSessionToken (): Promise<void> {
+    localStorage.removeItem('sessionToken')
+    return Promise.resolve()
   }
 }
 
 type SignData = {
   mail: string;
   pass: string;
+}
+
+type OAuth2CodeRedirect = {
+  state: string;
+  code: string;
+}
+
+type ErrorResponseJson = {
+  message: string;
 }
