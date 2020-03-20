@@ -14,6 +14,11 @@ const routes = [
     path: '/oauth2/signin/line',
     name: 'LineCooperation',
     component: () => import(/* webpackChunkName: "about" */ '../views/LineCooperation.vue')
+  },
+  {
+    path: '/product',
+    name: 'Exhibition',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Exhibition.vue')
   }
 ]
 

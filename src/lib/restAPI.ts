@@ -93,6 +93,38 @@ export default class RestAPI {
       .catch(() => Promise.reject(new Error('Lineでのログインに失敗しました')))
   }
 
+  getProducts (params: DisplayLimit): Promise<Array<ProductDetailResponse>> {
+    return axios({
+      url: this.host + '/products',
+      method: 'get',
+      params: params
+    })
+      .then((res: AxiosResponse) => {
+        const list: Array<ProductDetailResponse> = res.data
+        return list
+      })
+      .catch((e: AxiosError) => {
+        const errorResponseJson: ErrorResponseJson = e.response?.data
+        return Promise.reject(new Error(errorResponseJson.message))
+      })
+  }
+
+  postProduct (data: ProductDetailRequest): Promise<string> {
+    return this.findSessionToken().then(sessionToken => {
+      return axios({
+        url: this.host + '/product',
+        method: 'post',
+        headers: { Authorization: sessionToken },
+        data: data
+      })
+    })
+      .then((res: AxiosResponse) => '')
+      .catch((e: AxiosError) => {
+        const errorResponseJson: ErrorResponseJson = e.response?.data
+        return Promise.reject(new Error(errorResponseJson.message))
+      })
+  }
+
   private storeSessionToken (sessionToken: string): Promise<string> {
     localStorage.setItem('sessionToken', sessionToken)
     return Promise.resolve(sessionToken)
@@ -121,6 +153,28 @@ type SignData = {
 type OAuth2CodeRedirect = {
   state: string;
   code: string;
+}
+
+export type StateEnum = 'open' | 'draft' | 'closed'
+type ProductDetailRequest = {
+  title: string;
+  detail: string;
+  price: number;
+  state: StateEnum;
+}
+
+type ProductDetailResponse = {
+  id: string;
+  productTitle: string;
+  productDetail: string;
+  requestPrice: string;
+  presenterId: string;
+  state: string;
+}
+
+type DisplayLimit = {
+  limit?: number;
+  page?: number;
 }
 
 type ErrorResponseJson = {

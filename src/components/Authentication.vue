@@ -2,7 +2,7 @@
   <div class="authentication">
     <section class="signup" v-if="!isLogin()">
       <h5>新規登録</h5>
-      <p><input type="text" v-model="mail" placeholder="メールアドレス"></p>
+      <p><input type="email" v-model="mail" placeholder="メールアドレス"></p>
       <p><input type="password" v-model="pass" placeholder="パスワード"></p>
       <div class="links">
         <a @click="signupEvent()" class="button--signup">新規登録</a>
@@ -10,7 +10,7 @@
     </section>
     <section class="signin" v-if="!isLogin()">
       <h5>ログイン</h5>
-      <p><input type="text" v-model="mail" placeholder="メールアドレス"></p>
+      <p><input type="email" v-model="mail" placeholder="メールアドレス"></p>
       <p><input type="password" v-model="pass" placeholder="パスワード"></p>
       <div class="links">
         <a @click="signinEvent()" class="button--signin">ログイン</a>
