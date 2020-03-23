@@ -109,6 +109,40 @@ export default class RestAPI {
       })
   }
 
+  getProductDetail (productId: string): Promise<ProductDetailResponse> {
+    return axios({
+      url: this.host + '/product/' + productId,
+      method: 'get'
+    })
+      .then((res: AxiosResponse) => {
+        const result: ProductDetailResponse = res.data
+        return result
+      })
+      .catch((e: AxiosError) => {
+        const errorResponseJson: ErrorResponseJson = e.response?.data
+        return Promise.reject(new Error(errorResponseJson.message))
+      })
+  }
+
+  getMyProducts (params: StateDisplayLimit): Promise<Array<ProductDetailResponse>> {
+    return this.findSessionToken().then(sessionToken => {
+      return axios({
+        url: this.host + '/products/self',
+        method: 'get',
+        headers: { Authorization: sessionToken },
+        params: params
+      })
+    })
+      .then((res: AxiosResponse) => {
+        const list: Array<ProductDetailResponse> = res.data
+        return list
+      })
+      .catch((e: AxiosError) => {
+        const errorResponseJson: ErrorResponseJson = e.response?.data
+        return Promise.reject(new Error(errorResponseJson.message))
+      })
+  }
+
   postProduct (data: ProductDetailRequest): Promise<string> {
     return this.findSessionToken().then(sessionToken => {
       return axios({
@@ -118,7 +152,23 @@ export default class RestAPI {
         data: data
       })
     })
-      .then((res: AxiosResponse) => '')
+      .then((res: AxiosResponse) => res.data)
+      .catch((e: AxiosError) => {
+        const errorResponseJson: ErrorResponseJson = e.response?.data
+        return Promise.reject(new Error(errorResponseJson.message))
+      })
+  }
+
+  editProduct (productId: string, data: ProductDetailRequest): Promise<string> {
+    return this.findSessionToken().then(sessionToken => {
+      return axios({
+        url: this.host + '/product/' + productId,
+        method: 'put',
+        headers: { Authorization: sessionToken },
+        data: data
+      })
+    })
+      .then((res: AxiosResponse) => res.data)
       .catch((e: AxiosError) => {
         const errorResponseJson: ErrorResponseJson = e.response?.data
         return Promise.reject(new Error(errorResponseJson.message))
@@ -163,18 +213,22 @@ type ProductDetailRequest = {
   state: StateEnum;
 }
 
-type ProductDetailResponse = {
+export type ProductDetailResponse = {
   id: string;
   productTitle: string;
   productDetail: string;
-  requestPrice: string;
+  requestPrice: number;
   presenterId: string;
-  state: string;
+  state: StateEnum;
 }
 
 type DisplayLimit = {
   limit?: number;
   page?: number;
+}
+
+type StateDisplayLimit = DisplayLimit & {
+  state?: StateEnum;
 }
 
 type ErrorResponseJson = {

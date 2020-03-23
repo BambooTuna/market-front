@@ -3,12 +3,12 @@
     <input type="text" v-model="title" placeholder="タイトル">
     <input type="text" v-model="detail" placeholder="商品詳細">
     <input type="number" v-model="price" placeholder="価格">
-    <button @click="clickEvent('open')">出品</button> | <button @click="clickEvent('draft')">下書き</button>
+    <button @click="onClick('open')">出品</button> | <button @click="onClick('draft')">下書き</button>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Emit, Vue } from 'vue-property-decorator'
 import API, { StateEnum } from '../lib/restAPI'
 
 @Component
@@ -19,24 +19,20 @@ export default class EditProductForm extends Vue {
     private id?: string
 
     @Prop()
-    private title?: string = ''
+    private title!: string
 
     @Prop()
-    private detail?: string = ''
+    private detail!: string
 
     @Prop()
-    private price?: number = 0
+    private price!: number
 
-    @Prop()
-    private state: StateEnum = 'open'
+    @Emit()
+    public clickEvent (title: string, detail: string, price: number, state: StateEnum): void {
+    }
 
-    clickEvent (state: StateEnum) {
-      this.api.postProduct({
-        title: this.title!,
-        detail: this.detail!,
-        price: this.price!,
-        state: this.state
-      }).then(() => alert('完了'))
+    onClick (state: StateEnum) {
+        this.clickEvent(this.title, this.detail, this.price, state)
     }
 }
 </script>

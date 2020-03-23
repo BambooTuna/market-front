@@ -9,7 +9,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Authentication from '@/components/Authentication.vue'
 import ProductsTable from '@/components/ProductsTable.vue'
-import API from '../lib/restAPI'
+import API, { StateEnum } from '../lib/restAPI'
 
 @Component({
   components: {
@@ -22,9 +22,9 @@ export default class Home extends Vue {
       id: string;
       productTitle: string;
       productDetail: string;
-      requestPrice: string;
+      requestPrice: number;
       presenterId: string;
-      state: string;
+      state: StateEnum;
   }> = []
 
   created (): void {

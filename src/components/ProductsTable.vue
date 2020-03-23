@@ -4,8 +4,9 @@
       <thead>
       <tr>
         <th>Id</th>
-        <th>Title</th>
-        <th>Price</th>
+        <th>タイトル</th>
+        <th>価格</th>
+        <th>状態</th>
       </tr>
       </thead>
 
@@ -14,6 +15,7 @@
         <td>{{row.id}}</td>
         <td>{{row.productTitle}}</td>
         <td>{{row.requestPrice}}</td>
+        <td>{{row.state}}</td>
       </tr>
       </tbody>
     </table>
