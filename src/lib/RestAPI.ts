@@ -1,7 +1,23 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
+import {
+  DisplayLimit, ErrorResponseJson,
+  OAuth2CodeRedirect, ProductDetailRequest,
+  ProductDetailResponse,
+  SignData,
+  StateDisplayLimit
+} from '@/lib/RestAPIProtocol'
 
 export default class RestAPI {
   private host!: string
+  private _unauthorizedErrorHandler<T> (): Promise<T> { return Promise.reject(new Error('Default Error')) }
+
+  set unauthorizedErrorHandler (f: <T>() => Promise<T>) {
+    this._unauthorizedErrorHandler = f
+  }
+
+  get unauthorizedErrorHandler () {
+    return this._unauthorizedErrorHandler
+  }
 
   constructor (host = 'http://localhost:8080') {
     this.host = host
@@ -18,10 +34,7 @@ export default class RestAPI {
       }
     })
       .then((res: AxiosResponse) => this.storeSessionToken(res.headers['set-authorization']))
-      .catch((e: AxiosError) => {
-        const errorResponseJson: ErrorResponseJson = e.response?.data
-        return Promise.reject(new Error(errorResponseJson.message))
-      })
+      .catch((e: AxiosError) => this.unauthorizedHandler<string>(e))
   }
 
   signin (payload: SignData): Promise<string> {
@@ -35,10 +48,7 @@ export default class RestAPI {
       }
     })
       .then((res: AxiosResponse) => this.storeSessionToken(res.headers['set-authorization']))
-      .catch((e: AxiosError) => {
-        const errorResponseJson: ErrorResponseJson = e.response?.data
-        return Promise.reject(new Error(errorResponseJson.message))
-      })
+      .catch((e: AxiosError) => this.unauthorizedHandler<string>(e))
   }
 
   health (): Promise<string> {
@@ -50,11 +60,8 @@ export default class RestAPI {
           headers: { Authorization: sessionToken },
           data: {}
         })
-      })
-      .then(() => this.findSessionToken())
-      .catch((e: AxiosError) => {
-        const errorResponseJson: ErrorResponseJson = e.response?.data
-        return Promise.reject(new Error(errorResponseJson.message))
+          .then(() => this.findSessionToken())
+          .catch((e: AxiosError) => this.unauthorizedHandler<string>(e))
       })
   }
 
@@ -67,11 +74,8 @@ export default class RestAPI {
           headers: { Authorization: sessionToken },
           data: {}
         })
-      })
-      .then(() => this.removeSessionToken())
-      .catch((e: AxiosError) => {
-        const errorResponseJson: ErrorResponseJson = e.response?.data
-        return Promise.reject(new Error(errorResponseJson.message))
+          .then(() => this.removeSessionToken())
+          .catch((e: AxiosError) => this.unauthorizedHandler<void>(e))
       })
   }
 
@@ -81,7 +85,7 @@ export default class RestAPI {
       method: 'post'
     })
       .then((res: AxiosResponse) => res.data.redirectUri)
-      .catch(() => Promise.reject(new Error('連携URIの発行に失敗しました')))
+      .catch((e: AxiosError) => this.errorMessageHandler<string>(e))
   }
 
   lineCooperationSignin (params: OAuth2CodeRedirect): Promise<string> {
@@ -89,8 +93,9 @@ export default class RestAPI {
       url: this.host + '/oauth2/signin/line',
       method: 'get',
       params: params
-    }).then((res: AxiosResponse) => this.storeSessionToken(res.headers['set-authorization']))
-      .catch(() => Promise.reject(new Error('Lineでのログインに失敗しました')))
+    })
+      .then((res: AxiosResponse) => this.storeSessionToken(res.headers['set-authorization']))
+      .catch((e: AxiosError) => this.unauthorizedHandler<string>(e))
   }
 
   getProducts (params: DisplayLimit): Promise<Array<ProductDetailResponse>> {
@@ -103,10 +108,7 @@ export default class RestAPI {
         const list: Array<ProductDetailResponse> = res.data
         return list
       })
-      .catch((e: AxiosError) => {
-        const errorResponseJson: ErrorResponseJson = e.response?.data
-        return Promise.reject(new Error(errorResponseJson.message))
-      })
+      .catch((e: AxiosError) => this.errorMessageHandler<Array<ProductDetailResponse>>(e))
   }
 
   getProductDetail (productId: string): Promise<ProductDetailResponse> {
@@ -118,10 +120,7 @@ export default class RestAPI {
         const result: ProductDetailResponse = res.data
         return result
       })
-      .catch((e: AxiosError) => {
-        const errorResponseJson: ErrorResponseJson = e.response?.data
-        return Promise.reject(new Error(errorResponseJson.message))
-      })
+      .catch((e: AxiosError) => this.errorMessageHandler<ProductDetailResponse>(e))
   }
 
   getMyProducts (params: StateDisplayLimit): Promise<Array<ProductDetailResponse>> {
@@ -132,15 +131,12 @@ export default class RestAPI {
         headers: { Authorization: sessionToken },
         params: params
       })
+        .then((res: AxiosResponse) => {
+          const list: Array<ProductDetailResponse> = res.data
+          return list
+        })
+        .catch((e: AxiosError) => this.unauthorizedHandler<Array<ProductDetailResponse>>(e))
     })
-      .then((res: AxiosResponse) => {
-        const list: Array<ProductDetailResponse> = res.data
-        return list
-      })
-      .catch((e: AxiosError) => {
-        const errorResponseJson: ErrorResponseJson = e.response?.data
-        return Promise.reject(new Error(errorResponseJson.message))
-      })
   }
 
   postProduct (data: ProductDetailRequest): Promise<string> {
@@ -151,12 +147,9 @@ export default class RestAPI {
         headers: { Authorization: sessionToken },
         data: data
       })
+        .then((res: AxiosResponse) => res.data)
+        .catch((e: AxiosError) => this.unauthorizedHandler<string>(e))
     })
-      .then((res: AxiosResponse) => res.data)
-      .catch((e: AxiosError) => {
-        const errorResponseJson: ErrorResponseJson = e.response?.data
-        return Promise.reject(new Error(errorResponseJson.message))
-      })
   }
 
   editProduct (productId: string, data: ProductDetailRequest): Promise<string> {
@@ -167,12 +160,9 @@ export default class RestAPI {
         headers: { Authorization: sessionToken },
         data: data
       })
+        .then((res: AxiosResponse) => res.data)
+        .catch((e: AxiosError) => this.unauthorizedHandler<string>(e))
     })
-      .then((res: AxiosResponse) => res.data)
-      .catch((e: AxiosError) => {
-        const errorResponseJson: ErrorResponseJson = e.response?.data
-        return Promise.reject(new Error(errorResponseJson.message))
-      })
   }
 
   private storeSessionToken (sessionToken: string): Promise<string> {
@@ -193,44 +183,18 @@ export default class RestAPI {
     localStorage.removeItem('sessionToken')
     return Promise.resolve()
   }
-}
 
-type SignData = {
-  mail: string;
-  pass: string;
-}
+  private unauthorizedHandler<T> (e: AxiosError): Promise<T> {
+    if (e.response?.status === 401) {
+      return this.removeSessionToken()
+        .then(() => this._unauthorizedErrorHandler<T>())
+    } else {
+      return this.errorMessageHandler(e)
+    }
+  }
 
-type OAuth2CodeRedirect = {
-  state: string;
-  code: string;
-}
-
-export type StateEnum = 'open' | 'draft' | 'closed'
-type ProductDetailRequest = {
-  title: string;
-  detail: string;
-  price: number;
-  state: StateEnum;
-}
-
-export type ProductDetailResponse = {
-  id: string;
-  productTitle: string;
-  productDetail: string;
-  requestPrice: number;
-  presenterId: string;
-  state: StateEnum;
-}
-
-type DisplayLimit = {
-  limit?: number;
-  page?: number;
-}
-
-type StateDisplayLimit = DisplayLimit & {
-  state?: StateEnum;
-}
-
-type ErrorResponseJson = {
-  message: string;
+  private errorMessageHandler<T> (e: AxiosError): Promise<T> {
+    const errorResponseJson: ErrorResponseJson = e.response?.data
+    return Promise.reject(new Error(errorResponseJson.message))
+  }
 }

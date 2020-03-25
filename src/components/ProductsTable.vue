@@ -24,18 +24,12 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import { ProductDetailResponse } from '@/lib/RestAPIProtocol'
 
 @Component
 export default class ProductsTable extends Vue {
     @Prop()
-    private items!: Array<{
-        id: string;
-        productTitle: string;
-        productDetail: string;
-        requestPrice: string;
-        presenterId: string;
-        state: string;
-    }>;
+    private items!: Array<ProductDetailResponse>;
 }
 </script>
 

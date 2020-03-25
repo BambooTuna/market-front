@@ -9,7 +9,8 @@
 
 <script lang="ts">
 import { Component, Prop, Emit, Vue } from 'vue-property-decorator'
-import API, { StateEnum } from '../lib/restAPI'
+import API from '@/lib/RestAPI'
+import { StateEnum } from '@/lib/RestAPIProtocol'
 
 @Component
 export default class EditProductForm extends Vue {
@@ -29,10 +30,11 @@ export default class EditProductForm extends Vue {
 
     @Emit()
     public clickEvent (title: string, detail: string, price: number, state: StateEnum): void {
+      // do nothing.
     }
 
     onClick (state: StateEnum) {
-        this.clickEvent(this.title, this.detail, this.price, state)
+      this.clickEvent(this.title, this.detail, this.price, state)
     }
 }
 </script>

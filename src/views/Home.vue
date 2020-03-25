@@ -9,7 +9,8 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Authentication from '@/components/Authentication.vue'
 import ProductsTable from '@/components/ProductsTable.vue'
-import API, { StateEnum } from '../lib/restAPI'
+import API from '@/lib/RestAPI'
+import { ProductDetailResponse } from '@/lib/RestAPIProtocol'
 
 @Component({
   components: {
@@ -18,21 +19,15 @@ import API, { StateEnum } from '../lib/restAPI'
 })
 
 export default class Home extends Vue {
-  public productList: Array<{
-      id: string;
-      productTitle: string;
-      productDetail: string;
-      requestPrice: number;
-      presenterId: string;
-      state: StateEnum;
-  }> = []
+    private api: API = new API()
+    public productList: Array<ProductDetailResponse> = []
 
-  created (): void {
-    new API()
-      .getProducts(this.$route.query)
-      .then(r => {
-        this.productList = r
-      })
-  }
+    created (): void {
+      this.api
+        .getProducts(this.$route.query)
+        .then(r => {
+          this.productList = r
+        })
+    }
 }
 </script>

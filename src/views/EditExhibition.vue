@@ -8,7 +8,8 @@
 import { Component, Vue } from 'vue-property-decorator'
 import EditProductForm from '@/components/EditProductForm.vue'
 import ProductsTable from '@/components/ProductsTable.vue'
-import API, { ProductDetailResponse, StateEnum } from '../lib/restAPI'
+import API from '@/lib/RestAPI'
+import { ProductDetailResponse, StateEnum } from '@/lib/RestAPIProtocol'
 
 @Component({
   components: {

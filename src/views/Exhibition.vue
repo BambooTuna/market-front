@@ -10,7 +10,8 @@
 import { Component, Vue } from 'vue-property-decorator'
 import EditProductForm from '@/components/EditProductForm.vue'
 import ProductsTable from '@/components/ProductsTable.vue'
-import API, { StateEnum } from '../lib/restAPI'
+import API from '@/lib/RestAPI'
+import { ProductDetailResponse, StateEnum } from '@/lib/RestAPIProtocol'
 
 @Component({
   components: {
@@ -19,14 +20,7 @@ import API, { StateEnum } from '../lib/restAPI'
 })
 export default class Exhibition extends Vue {
   private api: API = new API()
-  public productList: Array<{
-      id: string;
-      productTitle: string;
-      productDetail: string;
-      requestPrice: number;
-      presenterId: string;
-      state: StateEnum;
-  }> = []
+  public productList: Array<ProductDetailResponse> = []
 
   created (): void {
     this.api
