@@ -1,7 +1,7 @@
 <template>
   <div class="product-detail-view">
     <ProductDetail v-show="!isEditMode()" :item="item" :loadingFlag="loadingFlag"></ProductDetail>
-    <EditProductForm v-show="isEditMode()" :title="item.productTitle" :detail="item.productDetail" :price="item.requestPrice" @clickEvent="clickEvent"></EditProductForm>
+    <EditProductForm v-show="isEditMode()" :title="item.productTitle" :detail="item.productDetail" :price="item.requestPrice" @click-event="clickEvent"></EditProductForm>
   </div>
 </template>
 

@@ -1,23 +1,13 @@
 <template>
   <div class="products_table">
-    <table>
-      <thead>
-      <tr>
-        <th>タイトル</th>
-        <th>価格</th>
-        <th>状態</th>
-      </tr>
-      </thead>
-      <WaitLoading :loading_flag="loadingFlag">
-        <tbody>
-        <tr v-for="row in items" :key="row.id">
-          <td><router-link :to=" '/product/' + row.id + ((row.state === 'draft') ? '?mode=edit' : '')">{{row.productTitle}}</router-link></td>
-          <td>{{row.requestPrice}}</td>
-          <td>{{row.state}}</td>
-        </tr>
-        </tbody>
-      </WaitLoading>
-    </table>
+    <WaitLoading :loading_flag="loadingFlag">
+      <ul>
+        <li v-for="row in items" :key="row.id">
+          <h2><router-link :to=" '/product/' + row.id + ((row.state === 'draft') ? '?mode=edit' : '')">{{row.productTitle}} {{ (row.state == 'draft' ? '(下書き)' : '') }}</router-link></h2>
+          <p class="price">¥ {{row.requestPrice}}</p>
+        </li>
+      </ul>
+    </WaitLoading>
   </div>
 </template>
 
@@ -41,5 +31,28 @@ export default class ProductsTable extends Vue {
 </script>
 
 <style scoped>
-
+  ul, ol {
+    padding: 0;
+    position: relative;
+  }
+  ul li, ol li {
+    color: #000000;
+    border-left: solid 6px #000000;/*左側の線*/
+    border-right: solid 6px #000000;/*左側の線*/
+    border-bottom: solid 6px #000000;/*左側の線*/
+    border-top: solid 6px #000000;/*左側の線*/
+    background: rgba(241, 248, 255, 0.26);/*背景色*/
+    margin-bottom: 3px;/*下のバーとの余白*/
+    line-height: 1.5;
+    padding: 0.5em;
+    list-style-type: none!important;/*ポチ消す*/
+  }
+  h2 {
+    text-align: left;
+  }
+  .price {
+    color: #962f10;/*文字色*/
+    text-align: right;
+    border-radius: 0.5em;/*角丸*/
+  }
 </style>

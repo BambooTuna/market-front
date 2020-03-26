@@ -28,6 +28,8 @@
         <div class="links">
           <button @click="logoutEvent()" class="button--logout">ログアウト</button>
         </div>
+      </section>
+      <section class="slot" v-if="isLogin">
         <slot></slot>
       </section>
     </WaitLoading>
@@ -113,5 +115,13 @@ export default class Authentication extends Vue {
 </script>
 
 <style scoped>
-
+  .signup, .signin, .cooperation, .logout {
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    font-weight: bold;
+    color: #6091d3;/*文字色*/
+    background: #FFF;
+    border: solid 3px #6091d3;/*線*/
+    border-radius: 10px;/*角の丸み*/
+  }
 </style>

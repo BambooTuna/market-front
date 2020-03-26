@@ -1,8 +1,8 @@
 <template>
   <div class="edit_product_form">
-    <input type="text" v-model="title" placeholder="タイトル">
-    <input type="text" v-model="detail" placeholder="商品詳細">
-    <input type="number" v-model="price" placeholder="価格">
+    <input type="text" v-model="title" placeholder="タイトル"><br>
+    <input type="text" v-model="detail" placeholder="商品詳細"><br>
+    <input type="number" v-model="price" placeholder="価格"><br>
     <button @click="onClick('open')">出品</button> | <button @click="onClick('draft')">下書き</button>
   </div>
 </template>
@@ -40,5 +40,13 @@ export default class EditProductForm extends Vue {
 </script>
 
 <style scoped>
-
+  .edit_product_form {
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    font-weight: bold;
+    color: #6091d3;/*文字色*/
+    background: #FFF;
+    border: solid 3px #6091d3;/*線*/
+    border-radius: 10px;/*角の丸み*/
+  }
 </style>

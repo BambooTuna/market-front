@@ -1,23 +1,13 @@
 <template>
   <div class="product-detail">
-    <table>
-      <thead>
-      <tr>
-        <th>タイトル</th>
-        <th>価格</th>
-        <th>詳細</th>
-      </tr>
-      </thead>
-      <WaitLoading :loading_flag="loadingFlag">
-        <tbody>
-        <tr>
-          <td>{{item.productTitle}}</td>
-          <td>{{item.requestPrice}}</td>
-          <td>{{item.productDetail}}</td>
-        </tr>
-        </tbody>
-      </WaitLoading>
-    </table>
+    <WaitLoading :loading_flag="loadingFlag">
+      <h1>{{item.productTitle}}</h1>
+      <p class="price">¥ {{item.requestPrice}}</p>
+      <div class="detail">
+        <h3>商品情報</h3>
+        <p>{{item.productDetail}}</p>
+      </div>
+    </WaitLoading>
   </div>
 </template>
 
@@ -41,5 +31,36 @@ export default class ProductDetail extends Vue {
 </script>
 
 <style scoped>
-
+  .product-detail {
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    font-weight: bold;
+    color: #6091d3;/*文字色*/
+    background: #FFF;
+    border: solid 3px #6091d3;/*線*/
+    border-radius: 10px;/*角の丸み*/
+  }
+  .detail {
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    font-weight: bold;
+    color: #000000;/*文字色*/
+    background: #FFF;
+    border: solid 3px #000000;/*線*/
+    border-radius: 2px;/*角の丸み*/
+  }
+  /* https://saruwakakun.com/html-css/reference/h-design */
+  h1 {
+    color: #000000;/*文字色*/
+    border-bottom: solid 3px black;
+  }
+  h3 {
+    background: #EEE;/*背景色*/
+    padding: 0.5em;/*文字まわり（上下左右）の余白*/
+  }
+  .price {
+    color: #962f10;/*文字色*/
+    text-align: left;
+    border-radius: 0.5em;/*角丸*/
+  }
 </style>
