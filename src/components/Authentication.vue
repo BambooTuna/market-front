@@ -28,6 +28,7 @@
         <div class="links">
           <button @click="logoutEvent()" class="button--logout">ログアウト</button>
         </div>
+        <slot></slot>
       </section>
     </WaitLoading>
   </div>

@@ -9,13 +9,10 @@
 
 <script lang="ts">
 import { Component, Prop, Emit, Vue } from 'vue-property-decorator'
-import API from '@/lib/RestAPI'
 import { ProductDetailRequest, StateEnum } from '@/lib/RestAPIProtocol'
 
 @Component
 export default class EditProductForm extends Vue {
-    private api = new API()
-
     @Prop()
     private title!: string
 
@@ -26,6 +23,7 @@ export default class EditProductForm extends Vue {
     private price!: number
 
     @Emit()
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public clickEvent (data: ProductDetailRequest): void {
       // do nothing.
     }

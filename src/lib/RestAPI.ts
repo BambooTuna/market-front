@@ -123,6 +123,21 @@ export default class RestAPI {
       .catch((e: AxiosError) => this.errorMessageHandler<ProductDetailResponse>(e))
   }
 
+  getMyProductDetail (productId: string): Promise<ProductDetailResponse> {
+    return this.findSessionToken().then(sessionToken => {
+      return axios({
+        url: this.host + '/product/' + productId,
+        method: 'get',
+        headers: { Authorization: sessionToken }
+      })
+        .then((res: AxiosResponse) => {
+          const result: ProductDetailResponse = res.data
+          return result
+        })
+        .catch((e: AxiosError) => this.errorMessageHandler<ProductDetailResponse>(e))
+    })
+  }
+
   getMyProducts (params: StateDisplayLimit): Promise<Array<ProductDetailResponse>> {
     return this.findSessionToken().then(sessionToken => {
       return axios({

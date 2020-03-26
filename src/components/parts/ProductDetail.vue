@@ -1,19 +1,19 @@
 <template>
-  <div class="products_table">
+  <div class="product-detail">
     <table>
       <thead>
       <tr>
         <th>タイトル</th>
         <th>価格</th>
-        <th>状態</th>
+        <th>詳細</th>
       </tr>
       </thead>
       <WaitLoading :loading_flag="loadingFlag">
         <tbody>
-        <tr v-for="row in items" :key="row.id">
-          <td><router-link :to=" '/product/' + row.id + ((row.state === 'draft') ? '?mode=edit' : '')">{{row.productTitle}}</router-link></td>
-          <td>{{row.requestPrice}}</td>
-          <td>{{row.state}}</td>
+        <tr>
+          <td>{{item.productTitle}}</td>
+          <td>{{item.requestPrice}}</td>
+          <td>{{item.productDetail}}</td>
         </tr>
         </tbody>
       </WaitLoading>
@@ -31,12 +31,12 @@ import WaitLoading from '@/components/parts/WaitLoading.vue'
     WaitLoading
   }
 })
-export default class ProductsTable extends Vue {
+export default class ProductDetail extends Vue {
     @Prop()
-    private items!: Array<ProductDetailResponse>;
+    private item!: ProductDetailResponse;
 
     @Prop()
-    private loadingFlag?: boolean = true
+    private loadingFlag!: boolean
 }
 </script>
 
