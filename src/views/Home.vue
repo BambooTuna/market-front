@@ -1,33 +1,20 @@
 <template>
   <div class="home">
     <Authentication></Authentication>
-    <ProductsTable :items="productList"></ProductsTable>
+    <PublicProductsTable :params="this.$route.query"></PublicProductsTable>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import Authentication from '@/components/Authentication.vue'
-import ProductsTable from '@/components/ProductsTable.vue'
-import API from '@/lib/RestAPI'
-import { ProductDetailResponse } from '@/lib/RestAPIProtocol'
-
+import PublicProductsTable from '@/components/PublicProductsTable.vue'
 @Component({
   components: {
-    Authentication, ProductsTable
+    Authentication, PublicProductsTable
   }
 })
 
 export default class Home extends Vue {
-    private api: API = new API()
-    public productList: Array<ProductDetailResponse> = []
-
-    created (): void {
-      this.api
-        .getProducts(this.$route.query)
-        .then(r => {
-          this.productList = r
-        })
-    }
 }
 </script>

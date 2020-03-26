@@ -6,14 +6,13 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import EditProductForm from '@/components/EditProductForm.vue'
-import ProductsTable from '@/components/ProductsTable.vue'
+import EditProductForm from '@/components/parts/EditProductForm.vue'
 import API from '@/lib/RestAPI'
-import { ProductDetailResponse, StateEnum } from '@/lib/RestAPIProtocol'
+import { ProductDetailRequest, ProductDetailResponse } from '@/lib/RestAPIProtocol'
 
 @Component({
   components: {
-    EditProductForm, ProductsTable
+    EditProductForm
   }
 })
 export default class EditExhibition extends Vue {
@@ -34,13 +33,8 @@ export default class EditExhibition extends Vue {
       .catch((e: Error) => alert(e.message))
   }
 
-  clickEvent (title: string, detail: string, price: number, state: StateEnum) {
-    this.api.editProduct(this.$route.params.id, {
-      title: title,
-      detail: detail,
-      price: price,
-      state: state
-    })
+  clickEvent (data: ProductDetailRequest) {
+    this.api.editProduct(this.$route.params.id, data)
       .then(() => alert('編集完了'))
       .catch((e: Error) => alert(e.message))
   }

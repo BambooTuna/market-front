@@ -6,7 +6,7 @@
         <p><input type="email" v-model="mail" placeholder="メールアドレス"></p>
         <p><input type="password" v-model="pass" placeholder="パスワード"></p>
         <div class="links">
-          <a @click="signupEvent()" class="button--signup">新規登録</a>
+          <button @click="signupEvent()" class="button--signup">新規登録</button>
         </div>
       </section>
       <section class="signin" v-if="!isLogin">
@@ -14,19 +14,19 @@
         <p><input type="email" v-model="mail" placeholder="メールアドレス"></p>
         <p><input type="password" v-model="pass" placeholder="パスワード"></p>
         <div class="links">
-          <a @click="signinEvent()" class="button--signin">ログイン</a>
+          <button @click="signinEvent()" class="button--signin">ログイン</button>
         </div>
       </section>
       <section class="cooperation" v-if="!isLogin">
         <h5>SNS連携</h5>
         <div class="links">
-          <a @click="lineCooperationEvent()" class="button--cooperation">Line</a>
+          <button @click="lineCooperationEvent()" class="button--cooperation">Line</button>
         </div>
       </section>
       <section class="logout" v-if="isLogin">
         <h5>ログイン中です</h5>
         <div class="links">
-          <a @click="logoutEvent()" class="button--logout">ログアウト</a>
+          <button @click="logoutEvent()" class="button--logout">ログアウト</button>
         </div>
       </section>
     </WaitLoading>
@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import WaitLoading from '@/components/WaitLoading.vue'
+import WaitLoading from '@/components/parts/WaitLoading.vue'
 import API from '@/lib/RestAPI'
 
 @Component({
@@ -43,20 +43,16 @@ import API from '@/lib/RestAPI'
     WaitLoading
   }
 })
-
-@Component
 export default class Authentication extends Vue {
     private api: API = new API()
-    private loadingFlag!: boolean
 
     private mail?: string
     private pass?: string
 
-    @Prop()
-    public isLogin?: boolean = true
+    private isLogin?: boolean = false
+    private loadingFlag?: boolean = true
 
     async created () {
-      alert(this.isLogin)
       await this.api
         .health()
         .then(() => {
@@ -67,7 +63,6 @@ export default class Authentication extends Vue {
         }).finally(() => {
           this.loadingFlag = false
         })
-      alert(this.isLogin)
       this.init()
     }
 
@@ -82,6 +77,7 @@ export default class Authentication extends Vue {
         .then(() => {
           this.isLogin = true
         })
+        .catch((e: Error) => alert(e.message))
       this.init()
     }
 
@@ -91,6 +87,7 @@ export default class Authentication extends Vue {
         .then(() => {
           this.isLogin = true
         })
+        .catch((e: Error) => alert(e.message))
       this.init()
     }
 
@@ -100,13 +97,16 @@ export default class Authentication extends Vue {
         .then(() => {
           this.isLogin = false
         })
+        .catch((e: Error) => alert(e.message))
       this.init()
     }
 
     async lineCooperationEvent () {
-      await this.api.generateLineCooperationUrl().then((redirectUri: string) => {
-        window.location.replace(redirectUri)
-      })
+      await this.api.generateLineCooperationUrl()
+        .then((redirectUri: string) => {
+          window.location.replace(redirectUri)
+        })
+        .catch((e: Error) => alert(e.message))
     }
 }
 </script>

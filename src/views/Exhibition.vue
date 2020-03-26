@@ -1,43 +1,31 @@
 <template>
   <div class="exhibition">
-    <EditProductForm title="" detail="" price=0 @clickEvent="clickEvent"></EditProductForm>
+    <EditProductForm title="" detail="" price=0 @click-event="clickEvent"></EditProductForm>
     <h2>自分の出品一覧</h2>
-    <ProductsTable :items="productList"></ProductsTable>
+    <PrivateProductsTable :params="this.$route.query"></PrivateProductsTable>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import EditProductForm from '@/components/EditProductForm.vue'
-import ProductsTable from '@/components/ProductsTable.vue'
+import EditProductForm from '@/components/parts/EditProductForm.vue'
+import PrivateProductsTable from '@/components/PrivateProductsTable.vue'
 import API from '@/lib/RestAPI'
-import { ProductDetailResponse, StateEnum } from '@/lib/RestAPIProtocol'
+import { ProductDetailRequest } from '@/lib/RestAPIProtocol'
 
 @Component({
   components: {
-    EditProductForm, ProductsTable
+    EditProductForm, PrivateProductsTable
   }
 })
 export default class Exhibition extends Vue {
   private api: API = new API()
-  public productList: Array<ProductDetailResponse> = []
 
-  created (): void {
-    this.api
-      .getMyProducts(this.$route.query)
-      .then(r => {
-        this.productList = r
+  clickEvent (data: ProductDetailRequest) {
+    this.api.postProduct(data)
+      .then(() => {
+        alert('出品完了')
       })
-  }
-
-  clickEvent (title: string, detail: string, price: number, state: StateEnum) {
-    this.api.postProduct({
-      title: title,
-      detail: detail,
-      price: price,
-      state: state
-    })
-      .then(() => alert('出品完了'))
       .catch((e: Error) => alert(e.message))
   }
 }

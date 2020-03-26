@@ -10,14 +10,11 @@
 <script lang="ts">
 import { Component, Prop, Emit, Vue } from 'vue-property-decorator'
 import API from '@/lib/RestAPI'
-import { StateEnum } from '@/lib/RestAPIProtocol'
+import { ProductDetailRequest, StateEnum } from '@/lib/RestAPIProtocol'
 
 @Component
 export default class EditProductForm extends Vue {
     private api = new API()
-
-    @Prop()
-    private id?: string
 
     @Prop()
     private title!: string
@@ -29,12 +26,17 @@ export default class EditProductForm extends Vue {
     private price!: number
 
     @Emit()
-    public clickEvent (title: string, detail: string, price: number, state: StateEnum): void {
+    public clickEvent (data: ProductDetailRequest): void {
       // do nothing.
     }
 
     onClick (state: StateEnum) {
-      this.clickEvent(this.title, this.detail, this.price, state)
+      this.clickEvent({
+        title: this.title,
+        detail: this.detail,
+        price: this.price,
+        state: state
+      })
     }
 }
 </script>

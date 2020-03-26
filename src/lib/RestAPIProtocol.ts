@@ -5,8 +5,8 @@ export type SignData = {
 }
 
 export type OAuth2CodeRedirect = {
-  state: string;
-  code: string;
+  state?: string;
+  code?: string;
 }
 
 export type StateEnum = 'open' | 'draft' | 'closed'
