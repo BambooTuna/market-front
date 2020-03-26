@@ -3,8 +3,9 @@
     <WaitLoading :loading_flag="loadingFlag">
       <ul>
         <li v-for="row in items" :key="row.id">
-          <h2><router-link :to=" '/product/' + row.id + ((row.state === 'draft') ? '?mode=edit' : '')">{{row.productTitle}} {{ (row.state == 'draft' ? '(下書き)' : '') }}</router-link></h2>
+          <h2><router-link :to=" '/product/' + row.id + (privateMode ? '?mode=edit' : '')">{{row.productTitle}}</router-link></h2>
           <p class="price">¥ {{row.requestPrice}}</p>
+          <p class="state" v-show="privateMode">{{ (row.state === 'draft' ? '下書き' : '出品中') }}</p>
         </li>
       </ul>
     </WaitLoading>
@@ -12,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Emit, Vue } from 'vue-property-decorator'
 import { ProductDetailResponse } from '@/lib/RestAPIProtocol'
 import WaitLoading from '@/components/parts/WaitLoading.vue'
 
@@ -24,6 +25,9 @@ import WaitLoading from '@/components/parts/WaitLoading.vue'
 export default class ProductsTable extends Vue {
     @Prop()
     private items!: Array<ProductDetailResponse>;
+
+    @Prop()
+    private privateMode!: boolean
 
     @Prop()
     private loadingFlag?: boolean = true
@@ -54,5 +58,9 @@ export default class ProductsTable extends Vue {
     color: #962f10;/*文字色*/
     text-align: right;
     border-radius: 0.5em;/*角丸*/
+  }
+  .state {
+    color: #000000;/*文字色*/
+    text-align: right;
   }
 </style>

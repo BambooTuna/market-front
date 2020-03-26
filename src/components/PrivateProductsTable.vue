@@ -1,6 +1,6 @@
 <template>
   <div class="private-products-table">
-        <ProductsTable :items="productList" :loadingFlag="loadingFlag"></ProductsTable>
+        <ProductsTable :items="productList" :privateMode="true" :loadingFlag="loadingFlag"></ProductsTable>
   </div>
 </template>
 

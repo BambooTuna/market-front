@@ -3,7 +3,8 @@
     <input type="text" v-model="title" placeholder="タイトル"><br>
     <input type="text" v-model="detail" placeholder="商品詳細"><br>
     <input type="number" v-model="price" placeholder="価格"><br>
-    <button @click="onClick('open')">出品</button> | <button @click="onClick('draft')">下書き</button>
+    <button @click="onClick('open')">出品</button> | <button @click="onClick('draft')">下書き</button><br>
+    <button class="delete" v-show="!isNew" @click="onClick('closed')">削除</button>
   </div>
 </template>
 
@@ -13,6 +14,9 @@ import { ProductDetailRequest, StateEnum } from '@/lib/RestAPIProtocol'
 
 @Component
 export default class EditProductForm extends Vue {
+    @Prop()
+    private isNew!: boolean
+
     @Prop()
     private title!: string
 
@@ -48,5 +52,8 @@ export default class EditProductForm extends Vue {
     background: #FFF;
     border: solid 3px #6091d3;/*線*/
     border-radius: 10px;/*角の丸み*/
+  }
+  .delete {
+    color: #ff3504;/*文字色*/
   }
 </style>
