@@ -2,8 +2,6 @@
   <div class="exhibition">
     <Authentication>
       <EditProductForm title="" detail="" price=0 @click-event="clickEvent" :isNew="true"></EditProductForm>
-      <h2>自分の出品一覧</h2>
-      <PrivateProductsTable :params="this.$route.query"></PrivateProductsTable>
     </Authentication>
   </div>
 </template>

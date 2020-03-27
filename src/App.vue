@@ -2,7 +2,8 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/product">出品</router-link>
+      <router-link to="/product">出品</router-link> |
+      <router-link to="/mypage">マイページ</router-link>
     </div>
     <router-view/>
   </div>

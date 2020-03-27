@@ -5,7 +5,7 @@
       <p class="price">¥ {{item.requestPrice}}</p>
       <div class="detail">
         <h3>商品情報</h3>
-        <p>{{item.productDetail}}</p>
+        <textarea type="text" v-model="item.productDetail" placeholder="商品詳細" rows="10" readonly></textarea>
       </div>
     </WaitLoading>
   </div>
@@ -49,7 +49,11 @@ export default class ProductDetail extends Vue {
     border: solid 3px #000000;/*線*/
     border-radius: 2px;/*角の丸み*/
   }
-  /* https://saruwakakun.com/html-css/reference/h-design */
+  textarea {
+    resize: vertical;
+    width: 90%;
+  }
+  /* https://saruwakakunw.com/html-css/reference/h-design */
   h1 {
     color: #000000;/*文字色*/
     border-bottom: solid 3px black;

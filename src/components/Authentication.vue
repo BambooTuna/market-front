@@ -6,7 +6,7 @@
         <p><input type="email" v-model="mail" placeholder="メールアドレス"></p>
         <p><input type="password" v-model="pass" placeholder="パスワード"></p>
         <div class="links">
-          <button @click="signupEvent()" class="button--signup">新規登録</button>
+          <button type="submit" @click="signupEvent()" class="button--signup">新規登録</button>
         </div>
       </section>
       <section class="signin" v-if="!isLogin">
@@ -14,19 +14,19 @@
         <p><input type="email" v-model="mail" placeholder="メールアドレス"></p>
         <p><input type="password" v-model="pass" placeholder="パスワード"></p>
         <div class="links">
-          <button @click="signinEvent()" class="button--signin">ログイン</button>
+          <button type="submit" @click="signinEvent()" class="button--signin">ログイン</button>
         </div>
       </section>
       <section class="cooperation" v-if="!isLogin">
         <h5>SNS連携</h5>
         <div class="links">
-          <button @click="lineCooperationEvent()" class="button--cooperation">Line</button>
+          <button type="submit" @click="lineCooperationEvent()" class="button--cooperation">Line</button>
         </div>
       </section>
       <section class="logout" v-if="isLogin">
         <h5>ログイン中です</h5>
         <div class="links">
-          <button @click="logoutEvent()" class="button--logout">ログアウト</button>
+          <button type="submit" @click="logoutEvent()" class="button--logout">ログアウト</button>
         </div>
       </section>
       <section class="slot" v-if="isLogin">
@@ -123,5 +123,41 @@ export default class Authentication extends Vue {
     background: #FFF;
     border: solid 3px #6091d3;/*線*/
     border-radius: 10px;/*角の丸み*/
+  }
+
+  button {
+    display: inline-block;
+    max-width: 180px;
+    text-align: left;
+    background-color: #a6a6a6;
+    font-size: 16px;
+    color: #FFF;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 24px;
+    border-radius: 4px;
+    border-bottom: 4px solid #696969;
+  }
+  button:active {
+    transform: translateY(4px);
+    border-bottom: none;
+  }
+
+  button.button--cooperation {
+    display: inline-block;
+    max-width: 180px;
+    text-align: left;
+    background-color: #02d348;
+    font-size: 16px;
+    color: #FFF;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 24px;
+    border-radius: 4px;
+    border-bottom: 4px solid #01862e;
+  }
+  button:active.button--cooperation {
+    transform: translateY(4px);
+    border-bottom: none;
   }
 </style>
