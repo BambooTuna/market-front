@@ -29,6 +29,7 @@ export default class PublicProductsTable extends Vue {
         .then(r => {
           this.productList = r
         })
+        .catch((e: Error) => alert(e.message))
         .finally(() => {
           this.loadingFlag = false
         })

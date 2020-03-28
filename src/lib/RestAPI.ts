@@ -91,7 +91,7 @@ export default class RestAPI {
       method: 'post'
     })
       .then((res: AxiosResponse) => res.data.redirectUri)
-      .catch((e: AxiosError) => this.errorMessageHandler<string>(e))
+      .catch((e: AxiosError) => this.errorHandler<string>(e))
   }
 
   lineCooperationSignin (params: OAuth2CodeRedirect): Promise<string> {
@@ -114,7 +114,7 @@ export default class RestAPI {
         const list: Array<ProductDetailResponse> = res.data
         return list
       })
-      .catch((e: AxiosError) => this.errorMessageHandler<Array<ProductDetailResponse>>(e))
+      .catch((e: AxiosError) => this.errorHandler<Array<ProductDetailResponse>>(e))
   }
 
   getProductDetail (productId: string): Promise<ProductDetailResponse> {
@@ -126,7 +126,7 @@ export default class RestAPI {
         const result: ProductDetailResponse = res.data
         return result
       })
-      .catch((e: AxiosError) => this.errorMessageHandler<ProductDetailResponse>(e))
+      .catch((e: AxiosError) => this.errorHandler<ProductDetailResponse>(e))
   }
 
   getMyProductDetail (productId: string): Promise<ProductDetailResponse> {
@@ -140,7 +140,7 @@ export default class RestAPI {
           const result: ProductDetailResponse = res.data
           return result
         })
-        .catch((e: AxiosError) => this.errorMessageHandler<ProductDetailResponse>(e))
+        .catch((e: AxiosError) => this.errorHandler<ProductDetailResponse>(e))
     })
   }
 
