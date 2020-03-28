@@ -11,9 +11,7 @@ https://console.developers.google.com/apis/api/appengine.googleapis.com/overview
 
 ### SetSecrets
 1. 
-    - Key: GcloudServiceKey
-    - value: [$ base64 -i service_account_key.json]
+    - Key: GcloudServiceKey | value: [$ base64 -i service_account_key.json]
 
 2.
-    - key: ProjectName
-    - value: [Your GCP Project Name]
+    - key: ProjectName | value: [Your GCP Project Name]
