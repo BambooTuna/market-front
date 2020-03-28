@@ -52,6 +52,8 @@ export default class ProductDetail extends Vue {
   textarea {
     resize: vertical;
     width: 90%;
+    box-sizing: border-box;
+    font-size: 16px;
   }
   /* https://saruwakakunw.com/html-css/reference/h-design */
   h1 {

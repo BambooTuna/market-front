@@ -9,18 +9,20 @@ import {
 
 export default class RestAPI {
   private host!: string
-  private _unauthorizedErrorHandler<T> (): Promise<T> { return Promise.reject(new Error('Default Error')) }
+  private _unauthorizedErrorHandler<T> (): Promise<T> { return Promise.reject(new Error('Default unauthorized Error')) }
+  private _notFoundErrorHandler<T> (): Promise<T> { return Promise.reject(new Error('Default notFound Error')) }
 
   set unauthorizedErrorHandler (f: <T>() => Promise<T>) {
     this._unauthorizedErrorHandler = f
   }
 
-  get unauthorizedErrorHandler () {
-    return this._unauthorizedErrorHandler
+  set notFoundErrorHandler (f: <T>() => Promise<T>) {
+    this._notFoundErrorHandler = f
   }
 
   constructor (host = process.env.VUE_APP_SERVER_ENDPOINT) {
-    this.host = host
+    this.host = 'http://localhost:8080'
+    // host
   }
 
   signup (payload: SignData): Promise<string> {
@@ -200,6 +202,15 @@ export default class RestAPI {
   }
 
   private unauthorizedHandler<T> (e: AxiosError): Promise<T> {
+    if (e.response?.status === 401) {
+      return this.removeSessionToken()
+        .then(() => this._unauthorizedErrorHandler<T>())
+    } else {
+      return this.errorMessageHandler(e)
+    }
+  }
+
+  private notFoundHandler<T> (e: AxiosError): Promise<T> {
     if (e.response?.status === 401) {
       return this.removeSessionToken()
         .then(() => this._unauthorizedErrorHandler<T>())

@@ -126,6 +126,10 @@ export default class Authentication extends Vue {
     border: solid 3px #6091d3;/*線*/
     border-radius: 10px;/*角の丸み*/
   }
+  input {
+    box-sizing: border-box;
+    font-size: 16px;
+  }
 
   button {
     display: inline-block;

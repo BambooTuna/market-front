@@ -1,25 +1,25 @@
 <template>
   <div class="edit_product_form">
-    <table>
-      <tbody>
-      <tr>
-        <th colspan="2" class="table-title">商品の説明</th>
-      </tr>
-      <tr>
-        <th>商品名</th>
-        <td><WaitLoading :loading_flag="loadingFlag"><input type="text" v-model="item.productTitle" placeholder="タイトル" class="title-input"></WaitLoading></td>
-      </tr>
-      <tr>
-        <th>詳細説明</th>
-        <td><WaitLoading :loading_flag="loadingFlag"><textarea type="text" v-model="item.productDetail" placeholder="商品詳細" rows="5"></textarea></WaitLoading></td>
-      </tr>
-      <tr>
-        <th>価格</th>
-        <td><WaitLoading :loading_flag="loadingFlag"><input type="number" v-model="item.requestPrice" placeholder="価格" class="price-input"></WaitLoading></td>
-      </tr>
-      </tbody>
-    </table><br><br><br>
     <WaitLoading :loading_flag="loadingFlag">
+      <table>
+        <tbody>
+        <tr>
+          <th colspan="2" class="table-title">商品の説明</th>
+        </tr>
+        <tr>
+          <th>商品名</th>
+          <td><input type="text" v-model="item.productTitle" placeholder="タイトル" class="title-input"></td>
+        </tr>
+        <tr>
+          <th>詳細説明</th>
+          <td><textarea type="text" v-model="item.productDetail" placeholder="商品詳細" rows="5"></textarea></td>
+        </tr>
+        <tr>
+          <th>価格</th>
+          <td><input type="number" v-model="item.requestPrice" placeholder="価格" class="price-input"></td>
+        </tr>
+        </tbody>
+      </table><br><br><br>
       <button @click="onClick('open')">出品</button><button @click="onClick('draft')">下書き</button><br>
       <button v-show="!isNew" @click="onClick('closed')">削除</button>
     </WaitLoading>
@@ -76,9 +76,15 @@ export default class EditProductForm extends Vue {
   .title-input {
     width: 90%;
   }
+  input {
+    box-sizing: border-box;
+    font-size: 16px;
+  }
   textarea {
     resize: vertical;
     width: 90%;
+    box-sizing: border-box;
+    font-size: 16px;
   }
   .price-input {
     width: 90%;
