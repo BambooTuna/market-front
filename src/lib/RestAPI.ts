@@ -21,8 +21,7 @@ export default class RestAPI {
   }
 
   constructor (host = process.env.VUE_APP_SERVER_ENDPOINT) {
-    this.host = 'http://localhost:8080'
-    // host
+    this.host = host
   }
 
   signup (payload: SignData): Promise<string> {
