@@ -11,9 +11,9 @@ automatic_scaling:
   max_concurrent_requests: 80
 
 handlers:
-  - url: /(js|css)/((.*)\.(js|css))$
-    static_files: static/\1
-    upload: static/(js|css)/(.*)\.(js|css)$
+  - url: /((.*)\.(js|css))$
+    static_files: dist/\1
+    upload: dist/(.*)\.(js|css)$
 
   - url: /(.*)
     static_files: dist/index.html
