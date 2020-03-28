@@ -18,3 +18,6 @@ handlers:
   - url: /(.*)
     static_files: dist/index.html
     upload: dist/index.html
+
+vpc_access_connector:
+  name: "projects/market-114/locations/asia-northeast1/connectors/market-connect"
