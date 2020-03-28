@@ -35,4 +35,4 @@ jobs:
         CI: true
         PROJECT_NAME: ${{ secrets.ProjectName }}
         GCLOUD_SERVICE_KEY: ${{ secrets.GcloudServiceKey }}
-        SERVER_ENDPOINT: ${{ secrets.ServerEndpoint }}
+        SERVER_ENDPOINT: http://34.67.68.14:8080
