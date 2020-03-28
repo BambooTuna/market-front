@@ -19,7 +19,7 @@ export default class RestAPI {
     return this._unauthorizedErrorHandler
   }
 
-  constructor (host = 'http://localhost:8080') {
+  constructor (host = process.env.VUE_APP_SERVER_ENDPOINT) {
     this.host = host
   }
 

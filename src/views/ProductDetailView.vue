@@ -1,7 +1,7 @@
 <template>
   <div class="product-detail-view">
     <ProductDetail v-show="!isEditMode()" :item="item" :loadingFlag="loadingFlag"></ProductDetail>
-    <EditProductForm v-show="isEditMode()" :title="item.productTitle" :detail="item.productDetail" :price="item.requestPrice" @click-event="clickEvent" :isNew="false"></EditProductForm>
+    <EditProductForm v-show="isEditMode()" :item="item" @click-event="clickEvent" :isNew="false" :loadingFlag="loadingFlag"></EditProductForm>
   </div>
 </template>
 
@@ -19,7 +19,15 @@ import { ProductDetailRequest, ProductDetailResponse } from '@/lib/RestAPIProtoc
 })
 export default class ProductDetailView extends Vue {
     private api: API = new API()
-    private item!: ProductDetailResponse
+    private item: ProductDetailResponse = {
+      id: '',
+      productTitle: '',
+      productDetail: '',
+      requestPrice: 0,
+      presenterId: '',
+      state: 'draft'
+    }
+
     public loadingFlag?: boolean = true
     private productId!: string
 

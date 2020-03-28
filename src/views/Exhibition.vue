@@ -1,7 +1,7 @@
 <template>
   <div class="exhibition">
     <Authentication>
-      <EditProductForm title="" detail="" price=0 @click-event="clickEvent" :isNew="true"></EditProductForm>
+      <EditProductForm :item="item" @click-event="clickEvent" :isNew="true"></EditProductForm>
     </Authentication>
   </div>
 </template>
@@ -12,7 +12,7 @@ import Authentication from '@/components/Authentication.vue'
 import EditProductForm from '@/components/parts/EditProductForm.vue'
 import PrivateProductsTable from '@/components/PrivateProductsTable.vue'
 import API from '@/lib/RestAPI'
-import { ProductDetailRequest } from '@/lib/RestAPIProtocol'
+import { ProductDetailRequest, ProductDetailResponse } from '@/lib/RestAPIProtocol'
 
 @Component({
   components: {
@@ -21,6 +21,15 @@ import { ProductDetailRequest } from '@/lib/RestAPIProtocol'
 })
 export default class Exhibition extends Vue {
   private api: API = new API()
+
+  private item: ProductDetailResponse = {
+    id: '',
+    productTitle: '',
+    productDetail: '',
+    requestPrice: 0,
+    presenterId: '',
+    state: 'open'
+  }
 
   clickEvent (data: ProductDetailRequest) {
     this.api.postProduct(data)

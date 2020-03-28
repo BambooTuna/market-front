@@ -49,8 +49,8 @@ import API from '@/lib/RestAPI'
 export default class Authentication extends Vue {
     private api: API = new API()
 
-    private mail?: string
-    private pass?: string
+    private mail?: string = ''
+    private pass?: string = ''
 
     private isLogin?: boolean = false
     private loadingFlag?: boolean = true

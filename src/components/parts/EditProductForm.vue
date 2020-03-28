@@ -7,40 +7,44 @@
       </tr>
       <tr>
         <th>商品名</th>
-        <td><input type="text" v-model="title" placeholder="タイトル" class="title-input"></td>
+        <td><WaitLoading :loading_flag="loadingFlag"><input type="text" v-model="item.productTitle" placeholder="タイトル" class="title-input"></WaitLoading></td>
       </tr>
       <tr>
         <th>詳細説明</th>
-        <td><textarea type="text" v-model="detail" placeholder="商品詳細" rows="5"></textarea></td>
+        <td><WaitLoading :loading_flag="loadingFlag"><textarea type="text" v-model="item.productDetail" placeholder="商品詳細" rows="5"></textarea></WaitLoading></td>
       </tr>
       <tr>
         <th>価格</th>
-        <td><input type="number" v-model="price" placeholder="価格" class="price-input"></td>
+        <td><WaitLoading :loading_flag="loadingFlag"><input type="number" v-model="item.requestPrice" placeholder="価格" class="price-input"></WaitLoading></td>
       </tr>
       </tbody>
     </table><br><br><br>
-    <button @click="onClick('open')">出品</button><button @click="onClick('draft')">下書き</button><br>
-    <button v-show="!isNew" @click="onClick('closed')">削除</button>
+    <WaitLoading :loading_flag="loadingFlag">
+      <button @click="onClick('open')">出品</button><button @click="onClick('draft')">下書き</button><br>
+      <button v-show="!isNew" @click="onClick('closed')">削除</button>
+    </WaitLoading>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Emit, Vue } from 'vue-property-decorator'
-import { ProductDetailRequest, StateEnum } from '@/lib/RestAPIProtocol'
+import { ProductDetailRequest, ProductDetailResponse, StateEnum } from '@/lib/RestAPIProtocol'
+import WaitLoading from '@/components/parts/WaitLoading.vue'
 
-@Component
+@Component({
+  components: {
+    WaitLoading
+  }
+})
 export default class EditProductForm extends Vue {
     @Prop()
     private isNew!: boolean
 
     @Prop()
-    private title!: string
+    private loadingFlag!: boolean
 
     @Prop()
-    private detail!: string
-
-    @Prop()
-    private price!: number
+    private item!: ProductDetailResponse;
 
     @Emit()
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -50,9 +54,9 @@ export default class EditProductForm extends Vue {
 
     onClick (state: StateEnum) {
       this.clickEvent({
-        title: this.title,
-        detail: this.detail,
-        price: this.price,
+        title: this.item.productTitle,
+        detail: this.item.productDetail,
+        price: this.item.requestPrice,
         state: state
       })
     }
