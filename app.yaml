@@ -17,4 +17,6 @@ handlers:
 
   - url: /(.*)
     static_files: dist/\1
-    upload: dist/(.*)
+    upload:
+      - dist/(.*)
+      - dist/index.html
