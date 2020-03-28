@@ -6,6 +6,9 @@ $ docker-compose exec -e NODE_ENV=production vuecli4 npm run serve --prefix ./ma
 ```
 
 ## GithubActions
+### Enable gcloud API
+https://console.developers.google.com/apis/api/appengine.googleapis.com/overview
+
 ### SetSecrets
 1. 
     - Key: GcloudServiceKey
