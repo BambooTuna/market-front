@@ -2,7 +2,7 @@
 
 ## ローカル
 ```bash
-$ docker-compose exec -e NODE_ENV=production vuecli4 npm run serve --prefix ./market-front -- --port 9050 --host 0.0.0.0
+$ docker-compose exec vuecli4 npm run serve --prefix ./market-front -- --port 9050 --host 0.0.0.0
 ```
 
 ## GithubActions

@@ -3,16 +3,16 @@
     <WaitLoading :loading_flag="loadingFlag">
       <section class="signup" v-if="!isLogin">
         <h5>新規登録</h5>
-        <p><input type="email" v-model="mail" placeholder="メールアドレス"></p>
-        <p><input type="password" v-model="pass" placeholder="パスワード"></p>
+        <p><input type="email" v-model="signupMail" placeholder="メールアドレス"></p>
+        <p><input type="password" v-model="signupPass" placeholder="パスワード"></p>
         <div class="links">
           <button type="submit" @click="signupEvent()" class="button--signup">新規登録</button>
         </div>
       </section>
       <section class="signin" v-if="!isLogin">
         <h5>ログイン</h5>
-        <p><input type="email" v-model="mail" placeholder="メールアドレス"></p>
-        <p><input type="password" v-model="pass" placeholder="パスワード"></p>
+        <p><input type="email" v-model="signinMail" placeholder="メールアドレス"></p>
+        <p><input type="password" v-model="signinPass" placeholder="パスワード"></p>
         <div class="links">
           <button type="submit" @click="signinEvent()" class="button--signin">ログイン</button>
         </div>
@@ -49,8 +49,11 @@ import API from '@/lib/RestAPI'
 export default class Authentication extends Vue {
     private api: API = new API()
 
-    private mail?: string = ''
-    private pass?: string = ''
+    private signupMail?: string = ''
+    private signupPass?: string = ''
+
+    private signinMail?: string = ''
+    private signinPass?: string = ''
 
     private isLogin?: boolean = false
     private loadingFlag?: boolean = true
@@ -66,32 +69,31 @@ export default class Authentication extends Vue {
         }).finally(() => {
           this.loadingFlag = false
         })
-      this.init()
     }
 
     init () {
-      this.mail = ''
-      this.pass = ''
+      this.signupMail = ''
+      this.signupPass = ''
+      this.signinMail = ''
+      this.signinPass = ''
     }
 
     async signupEvent () {
       await this.api
-        .signup({ mail: this.mail || '', pass: this.pass || '' })
+        .signup({ mail: this.signupMail || '', pass: this.signupPass || '' })
         .then(() => {
           this.isLogin = true
         })
         .catch((e: Error) => alert(e.message))
-      this.init()
     }
 
     async signinEvent () {
       await this.api
-        .signin({ mail: this.mail || '', pass: this.pass || '' })
+        .signin({ mail: this.signinMail || '', pass: this.signinPass || '' })
         .then(() => {
           this.isLogin = true
         })
         .catch((e: Error) => alert(e.message))
-      this.init()
     }
 
     async logoutEvent () {
