@@ -17,22 +17,24 @@ jobs:
         node-version: [10.16.0]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install, build
-      run: |
-        npm install
-        NODE_ENV=production VUE_APP_SERVER_ENDPOINT=${SERVER_ENDPOINT} npm run build
-    - name: GAE deploy
-      run: |
-        echo ${GCLOUD_SERVICE_KEY} | base64 -d > ./service_key.json
-        echo 'github-actions@${PROJECT_NAME}.iam.gserviceaccount.com' | gcloud auth activate-service-account --key-file ./service_key.json
-        gcloud app deploy app.yaml --project ${PROJECT_NAME}
-      env:
-        CI: true
-        PROJECT_NAME: ${{ secrets.ProjectName }}
-        GCLOUD_SERVICE_KEY: ${{ secrets.GcloudServiceKey }}
-        SERVER_ENDPOINT: "http://34.67.68.14:8080"
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install, build
+        run: |
+          npm install
+          npm run build
+        env:
+          NODE_ENV: production
+          VUE_APP_SERVER_ENDPOINT: http://34.67.68.14:8080
+      - name: GAE deploy
+        run: |
+          echo ${GCLOUD_SERVICE_KEY} | base64 -d > ./service_key.json
+          echo 'github-actions@${PROJECT_NAME}.iam.gserviceaccount.com' | gcloud auth activate-service-account --key-file ./service_key.json
+          gcloud app deploy app.yaml --project ${PROJECT_NAME}
+        env:
+          CI: true
+          PROJECT_NAME: ${{ secrets.ProjectName }}
+          GCLOUD_SERVICE_KEY: ${{ secrets.GcloudServiceKey }}
