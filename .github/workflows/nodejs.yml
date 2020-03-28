@@ -1,0 +1,38 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install, build
+      run: |
+        npm install
+        NODE_ENV=production VUE_APP_SERVER_ENDPOINT=${SERVER_ENDPOINT} npm run build
+    - name: GAE deploy
+      run: |
+        echo ${GCLOUD_SERVICE_KEY} | base64 -d > ./service_key.json
+        echo 'github-actions@${PROJECT_NAME}.iam.gserviceaccount.com' | gcloud auth activate-service-account --key-file ./service_key.json
+        gcloud app deploy app.yaml --project ${PROJECT_NAME}
+      env:
+        CI: true
+        PROJECT_NAME: ${{ secrets.ProjectName }}
+        GCLOUD_SERVICE_KEY: ${{ secrets.GcloudServiceKey }}
+        SERVER_ENDPOINT: ${{ secrets.ServerEndpoint }}
