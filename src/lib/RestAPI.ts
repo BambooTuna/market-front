@@ -9,8 +9,9 @@ import {
 
 export default class RestAPI {
   private host!: string
-  private _unauthorizedErrorHandler<T> (): Promise<T> { return Promise.reject(new Error('Default unauthorized Error')) }
-  private _notFoundErrorHandler<T> (): Promise<T> { return Promise.reject(new Error('Default notFound Error')) }
+  private _unauthorizedErrorHandler<T> (): Promise<T> { return Promise.reject(new Error('Default Unauthorized Error')) }
+  private _notFoundErrorHandler<T> (): Promise<T> { return Promise.reject(new Error('Default NotFound Error')) }
+  private _internalServerErrorHandler<T> (): Promise<T> { return Promise.reject(new Error('Default Internal Server Error')) }
 
   set unauthorizedErrorHandler (f: <T>() => Promise<T>) {
     this._unauthorizedErrorHandler = f
@@ -18,6 +19,10 @@ export default class RestAPI {
 
   set notFoundErrorHandler (f: <T>() => Promise<T>) {
     this._notFoundErrorHandler = f
+  }
+
+  set internalServerErrorHandler (f: <T>() => Promise<T>) {
+    this._internalServerErrorHandler = f
   }
 
   constructor (host = process.env.VUE_APP_SERVER_ENDPOINT) {
@@ -35,7 +40,7 @@ export default class RestAPI {
       }
     })
       .then((res: AxiosResponse) => this.storeSessionToken(res.headers['set-authorization']))
-      .catch((e: AxiosError) => this.unauthorizedHandler<string>(e))
+      .catch((e: AxiosError) => this.errorHandler<string>(e))
   }
 
   signin (payload: SignData): Promise<string> {
@@ -49,7 +54,7 @@ export default class RestAPI {
       }
     })
       .then((res: AxiosResponse) => this.storeSessionToken(res.headers['set-authorization']))
-      .catch((e: AxiosError) => this.unauthorizedHandler<string>(e))
+      .catch((e: AxiosError) => this.errorHandler<string>(e))
   }
 
   health (): Promise<string> {
@@ -62,7 +67,7 @@ export default class RestAPI {
           data: {}
         })
           .then(() => this.findSessionToken())
-          .catch((e: AxiosError) => this.unauthorizedHandler<string>(e))
+          .catch((e: AxiosError) => this.errorHandler<string>(e))
       })
   }
 
@@ -76,7 +81,7 @@ export default class RestAPI {
           data: {}
         })
           .then(() => this.removeSessionToken())
-          .catch((e: AxiosError) => this.unauthorizedHandler<void>(e))
+          .catch((e: AxiosError) => this.errorHandler<void>(e))
       })
   }
 
@@ -96,7 +101,7 @@ export default class RestAPI {
       params: params
     })
       .then((res: AxiosResponse) => this.storeSessionToken(res.headers['set-authorization']))
-      .catch((e: AxiosError) => this.unauthorizedHandler<string>(e))
+      .catch((e: AxiosError) => this.errorHandler<string>(e))
   }
 
   getProducts (params: DisplayLimit): Promise<Array<ProductDetailResponse>> {
@@ -151,7 +156,7 @@ export default class RestAPI {
           const list: Array<ProductDetailResponse> = res.data
           return list
         })
-        .catch((e: AxiosError) => this.unauthorizedHandler<Array<ProductDetailResponse>>(e))
+        .catch((e: AxiosError) => this.errorHandler<Array<ProductDetailResponse>>(e))
     })
   }
 
@@ -164,7 +169,7 @@ export default class RestAPI {
         data: data
       })
         .then((res: AxiosResponse) => res.data)
-        .catch((e: AxiosError) => this.unauthorizedHandler<string>(e))
+        .catch((e: AxiosError) => this.errorHandler<string>(e))
     })
   }
 
@@ -177,7 +182,7 @@ export default class RestAPI {
         data: data
       })
         .then((res: AxiosResponse) => res.data)
-        .catch((e: AxiosError) => this.unauthorizedHandler<string>(e))
+        .catch((e: AxiosError) => this.errorHandler<string>(e))
     })
   }
 
@@ -200,19 +205,14 @@ export default class RestAPI {
     return Promise.resolve()
   }
 
-  private unauthorizedHandler<T> (e: AxiosError): Promise<T> {
+  private errorHandler<T> (e: AxiosError): Promise<T> {
     if (e.response?.status === 401) {
       return this.removeSessionToken()
         .then(() => this._unauthorizedErrorHandler<T>())
-    } else {
-      return this.errorMessageHandler(e)
-    }
-  }
-
-  private notFoundHandler<T> (e: AxiosError): Promise<T> {
-    if (e.response?.status === 401) {
-      return this.removeSessionToken()
-        .then(() => this._unauthorizedErrorHandler<T>())
+    } else if (e.response?.status === 404) {
+      return this._notFoundErrorHandler<T>()
+    } else if (e.response?.status === 500) {
+      return this._internalServerErrorHandler<T>()
     } else {
       return this.errorMessageHandler(e)
     }
